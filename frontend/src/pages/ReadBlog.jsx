@@ -1,12 +1,13 @@
 import { getPost } from "../api"
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 
 export function ReadBlog() {
     const [post, setPost] = useState({})
 
     //Params let grab the post id from URL
     let params = useParams()
+    const navigate = useNavigate()
     let id = params.id
 
     useEffect(() => {
@@ -22,6 +23,7 @@ export function ReadBlog() {
 
     return (
         <>
+            <button onClick={() => navigate(-1)}>Back</button>
             <h1>{post.title}</h1>
             <h2>{post.description}</h2>
             <h3>{post.dateCreated?.slice(4, 15)}</h3>

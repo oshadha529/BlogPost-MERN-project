@@ -1,9 +1,36 @@
-
+import { useState } from "react"
+import { createPost } from "../api"
 
 export function CreateBlog() {
+
+    const [title, setTitle] = useState("")
+    const [description, setdescription] = useState("")
+    const [content, setcontent] = useState("")
+
+    async function handleSubmit(){
+        let submitObject = {
+            title: title,
+            description: description,
+            content: content,
+            author: null,
+            dateCreated: new Date()
+        }
+
+        await createPost(submitObject)
+    }
+
     return (
-        <>
-            Create Blog page
-        </>
+        <form onSubmit={handleSubmit}>
+            <label>Blog Post Title: </label>
+            <input onChange={(e) => setTitle(e.target.value)} maxLength={100} required name="title" />
+
+            <label>Blog Description: </label>
+            <input onChange={(e) => setdescription(e.target.value)} maxLength={200} required name="description" />
+
+            <label>Blog Content: </label>
+            <textarea onChange={(e) => setcontent(e.target.value)} maxLength={5000} required name="content" />
+            
+            <button type="submit">Submit</button>
+        </form>
     )
 }
