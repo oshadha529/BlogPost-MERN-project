@@ -1,7 +1,9 @@
 const express = require("express")
 const database = require("./connect")
 const ObjectId = require("mongodb").ObjectId
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt")  //password hashing
+const jwt = require("jsonwebtoken")
+require("dotenv").config({path: "./config.env"})
 
 let userRoutes = express.Router()
 let SALT_ROUNDS = 6
@@ -85,7 +87,9 @@ userRoutes.route("/users/login").post(async (request, response) => {
     if (user) {
         let confirmation = bcrypt.compare(request.body.password, user.password)
         if (confirmation) {
-            response.json({success: true, user})
+            //creating a token that expires in 1h, so then noone can enter into the admin acc by editing the session storage
+            const token = jwt.sign(user, process.env.SECRETKEY, {expiresIn: "1h"})
+            response.json({success: true, token})
         } else {
             response.json({success: false, message: "Incorrect password"})
         }

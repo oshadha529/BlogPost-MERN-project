@@ -1,6 +1,7 @@
 import { verifyUser } from "../api"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import axios from "axios" //Axios is a library to call backend routes
 
 export function Login() {
 
@@ -19,6 +20,10 @@ export function Login() {
         e.preventDefault()
         let response = await verifyUser(user)
         if(response) {
+            navigate("/home")
+            sessionStorage.setItem("User", response)
+            //prevents unauthorized access
+            axios.defaults.headers.common["Authorization"] = `Bearer ${response}`
             navigate("/home")
         } else {
             alert("Login failed")
